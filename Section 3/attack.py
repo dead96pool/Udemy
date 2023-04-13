@@ -13,6 +13,8 @@ while playerhp > 0:
   
   print("Attack for ",dmg," points. Remaining HP is ",playerhp)
     
-  if playerhp == 30:
-    print("HP too low. You have been teleported to the nearest inn.")
-    break
+  if playerhp > 30:
+    continue
+  
+  print("HP too low. You have been teleported to the nearest inn.")
+  break
