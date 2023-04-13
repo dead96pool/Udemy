@@ -4,7 +4,6 @@ playerhp = 260
 enemyattklow = 60     # enemy attack low value 
 enemyattkhi = 80      # enemy attack high value
 
-
 while playerhp > 0:
   dmg = random.randrange(enemyattklow, enemyattkhi)
   playerhp -= dmg
