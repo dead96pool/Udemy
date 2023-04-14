@@ -9,5 +9,7 @@ class Enemy:
 
 
 enemy1 = Enemy()
+enemy2 = Enemy()
 
 enemy1.getAttk()
+enemy2.getAttk()
