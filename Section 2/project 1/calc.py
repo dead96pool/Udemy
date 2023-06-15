@@ -1,3 +1,9 @@
+"""
+Program: calculator
+Author: Sachleen
+
+"""
+
 import re
 
 print("\nMinimal Calc")
