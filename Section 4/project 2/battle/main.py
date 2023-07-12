@@ -12,3 +12,9 @@ running = True
 i = 0
 
 print(bcolors.FAIL + bcolors.BOLD + "AN ENEMY ATTACKS!" + bcolors.ENDC)
+
+while running:
+    print("=============================")
+    player.choose_action()
+
+    running = False

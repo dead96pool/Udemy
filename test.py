@@ -1,3 +1,5 @@
-
-
-print("Your name is "+input("name:")+" and your age is "+input("age:"))
+action = ["Attack", "Magic"]
+i = 1
+for item in action:
+    print(str(i)+":"+item)
+    i += 1
