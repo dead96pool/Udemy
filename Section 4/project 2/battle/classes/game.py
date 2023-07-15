@@ -13,7 +13,7 @@ class bcolors:
 
 class Person:
     # initializing the variables
-    def __init__(self, hp, mp, atk, df, magic, items):
+    def __init__(self, name, hp, mp, atk, df, magic, items):
         self.maxhp = hp                                 # max HP
         self.hp = hp                                    # current hp
         self.maxmp = mp                                 # max MP
@@ -23,6 +23,7 @@ class Person:
         self.df = df
         self.magic = magic
         self.items = items
+        self.name = name
         self.actions = ["Attack", "Magic", "Items"]
     
     # method to generate random damage points
@@ -57,22 +58,51 @@ class Person:
 
     def choose_action(self):
         i = 1
-        print("\n" + bcolors.OKBLUE + bcolors.BOLD + "ACTIONS:" + bcolors.ENDC)
+        print("\n    " + bcolors.BOLD + self.name + bcolors.ENDC)
+        print(bcolors.OKBLUE + bcolors.BOLD + "    ACTIONS:" + bcolors.ENDC)
         for item in self.actions:
-            print("    " + str(i) + ".", item)
+            print("     " + str(i) + ".", item)
             i += 1
 
     def choose_magic(self):
         i = 1
-        print("\n" + bcolors.OKBLUE + bcolors.BOLD + "MAGIC:" + bcolors.ENDC)
+        print("\n" + bcolors.OKBLUE + bcolors.BOLD + "    MAGIC:" + bcolors.ENDC)
         for spell in self.magic:
-            print("    " + str(i) + ".", spell.name, "(Cost:", str(spell.cost)+")")
+            print("     " + str(i) + ".", spell.name, "(Cost:", str(spell.cost)+")")
             i += 1
 
     def choose_item(self):
         i = 1
-        print("\n" + bcolors.OKGREEN + bcolors.BOLD + "ITEMS:" + bcolors.ENDC)
+        print("\n" + bcolors.OKGREEN + bcolors.BOLD + "    ITEMS:" + bcolors.ENDC)
         for item in self.items:
-            print("    " + str(i) + ".", item["item"].name + ":", item["item"].desc, " (x" + str(item["quantity"]) + ")" )
+            print("     " + str(i) + ".", item["item"].name + ":", item["item"].desc, " (x" + str(item["quantity"]) + ")" )
             i += 1
+        
+    # ascii 219 | █ to print player HP/MP bar
+    def get_stats(self):
+        hp_bar = ""
+        hp_ticks = (self.hp / self.maxhp) * 25            # calculate the percentage of the bar
+
+        mp_bar = ""
+        mp_ticks = (self.mp / self.maxmp) * 10
+
+        # hp bar
+        while hp_ticks > 0:
+            hp_bar += "█"
+            hp_ticks -= 1
+        while len(hp_bar) < 25:
+            hp_bar += " "
+
+        # mp bar
+        while mp_ticks > 0:
+            mp_bar += "█"
+            mp_ticks -= 1
+        while len(mp_bar) < 10:
+            mp_bar += " "
+
+        print("                      _________________________               __________")
+        # formating to align left and be 4 and 2 characters long resp
+        print(bcolors.BOLD + self.name + "     " + 
+                "{:>4s}".format(str(self.hp)) + "/" + str(self.maxhp) + " |" + bcolors.OKGREEN + hp_bar + bcolors.ENDC + "|       " + bcolors.BOLD +
+                "{:>2s}".format(str(self.mp)) + "/" + str(self.maxmp) + " |" + bcolors.OKBLUE + mp_bar + bcolors.ENDC + "|\n")
         
