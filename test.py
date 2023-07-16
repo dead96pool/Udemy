@@ -1,5 +1,6 @@
-action = ["Attack", "Magic"]
-i = 1
-for item in action:
-    print(str(i)+":"+item)
-    i += 1
+import random
+
+players = ["1","2","3"]
+print(len(players))
+
+print(random.randrange(0,len(players)-1))

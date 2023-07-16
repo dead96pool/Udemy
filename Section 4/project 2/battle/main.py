@@ -2,24 +2,25 @@
 from classes.game import Person, bcolors
 from classes.magic import Spell
 from classes.inventory import Item
-
+import random
 
 # instantiate Black Magic
-fire = Spell("Fire", 10, 100, "black")
-thunder = Spell("Thunder", 10, 100, "black")
-blizzard = Spell("Blizzard", 10, 100, "black")
-meteor = Spell("Meteor", 20, 200, "black")
+# def __init__(self, name, cost, dmg, type):
+fire = Spell("Fire", 25, 600, "black")
+thunder = Spell("Thunder", 25, 600, "black")
+blizzard = Spell("Blizzard", 25, 600, "black")
+meteor = Spell("Meteor", 40, 1200, "black")
 quake = Spell("Quake", 14, 140, "black")
 
 # create White Magic
-cure = Spell("Cure",  12, 120, "white")
-cura = Spell("Cura", 18, 200, "white")
+cure = Spell("Cure",  25, 620, "white")
+cura = Spell("Cura", 32, 1500, "white")
 
 
 # create buncha items
 potion = Item("Potion", "potion", "Heals 50 HP", 50)
 hipotion = Item("Hi-potion", "potion", "Heals 100 HP", 100)
-superpotion = Item("Super Potion", "potion", "Heals 500 HP", 500)
+superpotion = Item("Super Potion", "potion", "Heals 1000 HP", 1000)
 elixer = Item("Elixer", "elixer", "Fully Restores HP/MP of one party-member", 9999)
 hielixer = Item("MegaElixer", "elixer", "Fully restores party's HP/MP", 9999)
 
@@ -34,31 +35,33 @@ player_items = [{"item": potion, "quantity": 15}, {"item": hipotion, "quantity":
 
 # Intantiate People
 # person class (hp, mp, atk, df, magic) argumetns in order
-player1 = Person("Valos:", 31190, 1165, 60, 34, player_spells, player_items)
-player2 = Person("Nick :", 4160, 1165, 60, 34, player_spells, player_items)
-player3 = Person("Robot:", 3089, 1165, 60, 34, player_spells, player_items)
-enemy = Person("Magus", 12000, 65, 380, 25, [], [])
+player1 = Person("Valos:", 3260, 132, 300, 34, player_spells, player_items)
+player2 = Person("Nick :", 4160, 188, 311, 34, player_spells, player_items)
+player3 = Person("Robot:", 3089, 174, 288, 34, player_spells, player_items)
+enemy = Person("Magus:", 11200, 701, 525, 25, [], [])
 
-players = [player1]
-
+players = [player1, player2, player3]
 
 
 running = True
 i = 0
 
+print("\n\n")
 print(bcolors.FAIL + bcolors.BOLD + "AN ENEMY ATTACKS!" + bcolors.ENDC)
 
 while running:
     print("=============================")
 
-    print("\n\n")
-    print("NAME                  HP                                      MP")
+    print("\n")
+    #print("NAME                  HP                                      MP")
+    print("{:<35}{:<45}".format("NAME","HP") + "MP")
     # to print player stats at the start of every loop/round
     for player in players:
         player.get_stats()
         
     print("\n")
         
+    enemy.get_enemy_stats()
 
     # the actual round/loop
     for player in players:
@@ -72,7 +75,7 @@ while running:
         if index == 0:
             dmg = player.generate_damage()
             enemy.take_damage(dmg)
-            print("You attacked for", dmg, "points of damage.")
+            print("\nYou attacked for", dmg, "points of damage.")
 
         # player chose magic
         elif index == 1:
@@ -123,8 +126,15 @@ while running:
                 player.heal(item.prop)
                 print(bcolors.OKGREEN + "\n" + item.name + " heals for", item.prop, "HP" + bcolors.ENDC)
             elif item.type == "elixer":
-                player.hp = player.maxhp
-                player.mp = player.maxmp
+
+                if item.name == "MegaElixer":
+                    for i in players:
+                        player.hp = player.maxhp
+                        player.mp = player.maxmp
+                else:        
+                    player.hp = player.maxhp
+                    player.mp = player.maxmp
+
                 print(bcolors.OKGREEN + "\n" + item.name + " fully restore player HP/MP" + bcolors.ENDC)
             elif item.type == "attack":
                 enemy.take_damage(item.prop)
@@ -133,20 +143,30 @@ while running:
 
     #enemy turn to attack or magic
     enemy_choice = 1                    # enemy chose to attack
+    
+    target = random.randrange(0,len(players))
+    
     enemy_dmg = enemy.generate_damage()
-    player1.take_damage(enemy_dmg)
+    players[target].take_damage(enemy_dmg)
     print("Enemy attacked for", enemy_dmg, "points of damage.")
 
     # end of player and enemy turn
-    # display both player and enemy HP/MAX_HP
-    print("=============================")
-    print("Enemy HP: ", bcolors.FAIL + str(enemy.get_hp()) + "/" + str(enemy.get_max_hp()) + bcolors.ENDC + "\n")
-    
 
     # end the game if hp reaches 0
     if enemy.get_hp() == 0:
-        print(bcolors.OKGREEN + "You win!" + bcolors.ENDC)
+        print("\n")
+        for player in players:
+            player.get_stats()
+        print("\n\n")
+        enemy.get_enemy_stats()
+
+        print(bcolors.OKGREEN + "\nYou win!\n" + bcolors.ENDC)
         running = False
     elif player1.get_hp() == 0:
-        print(bcolors.FAIL + "Your enemy has defeated you!" + bcolors.ENDC)
+        print("\n")
+        for player in players:
+            player.get_stats()
+        print("\n\n")
+        enemy.get_enemy_stats()
+        print(bcolors.FAIL + "\nYour enemy has defeated you!\n" + bcolors.ENDC)
         running = False
