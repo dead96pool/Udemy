@@ -78,6 +78,17 @@ class Person:
             print("     " + str(i) + ".", item["item"].name + ":", item["item"].desc, " (x" + str(item["quantity"]) + ")" )
             i += 1
         
+    def choose_target(self, enemies):
+        i = 1
+        print(bcolors.BOLD + bcolors.FAIL + "    TARGET:" + bcolors.ENDC)
+        
+        for enemy in enemies:
+            print("        " + str(i) + "." + enemy.name)
+            i += 1
+        choice = int(input("    Choose Target: ")) - 1
+        return choice
+    
+
     def get_enemy_stats(self):
         hp_bar = ""
         hp_ticks = (self.hp/self.maxhp) * 50
@@ -91,7 +102,7 @@ class Person:
 
         print("{:<35}{:}".format("", str("_"*50) ))
         # formating to align left and be 4 and 2 characters long resp
-        print(bcolors.BOLD + "{:<13}{:>20} ".format(self.name, str(self.hp) + "/" + str(self.maxhp)) + "|" + bcolors.FAIL + hp_bar + bcolors.ENDC + "|\n" )        
+        print(bcolors.BOLD + "{:<13}{:>20} ".format(self.name + ":", str(self.hp) + "/" + str(self.maxhp)) + "|" + bcolors.FAIL + hp_bar + bcolors.ENDC + "|\n" )        
     
     # ascii 219 | █ to print player HP/MP bar
     def get_stats(self):
@@ -122,5 +133,5 @@ class Person:
                 "{:>{hp_len}}".format(str(self.hp), hp_len = hp_len) + "/" + str(self.maxhp) + " |" + bcolors.OKGREEN + hp_bar + bcolors.ENDC + "|       " + bcolors.BOLD +
                 "{:>{mp_len}s}".format(str(self.mp), mp_len = mp_len) + "/" + str(self.maxmp) + " |" + bcolors.OKBLUE + mp_bar + bcolors.ENDC + "|\n")
         """
-        print(bcolors.BOLD + "{:<13}{:>20} ".format(self.name, str(self.hp) + "/" + str(self.maxhp)) + "|" + bcolors.OKGREEN + hp_bar + bcolors.ENDC + "|" +
+        print(bcolors.BOLD + "{:<13}{:>20} ".format(self.name + ":", str(self.hp) + "/" + str(self.maxhp)) + "|" + bcolors.OKGREEN + hp_bar + bcolors.ENDC + "|" +
                         "{:>17} ".format(str(self.mp) + "/" + str(self.maxmp)) + "|" + bcolors.OKBLUE + mp_bar + bcolors.ENDC + "|\n" )
