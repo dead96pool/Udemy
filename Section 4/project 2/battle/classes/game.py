@@ -1,5 +1,5 @@
 import random
-from classes.magic import Spell
+from .magic import Spell
 
 class bcolors:
     HEADER = '\033[95m'
@@ -77,9 +77,14 @@ class Person:
         for item in self.items:
             print("     " + str(i) + ".", item["item"].name + ":", item["item"].desc, " (x" + str(item["quantity"]) + ")" )
             i += 1
-        
+
     def choose_target(self, enemies):
         i = 1
+        
+        if len(enemies) == 1:
+            return 0
+
+
         print(bcolors.BOLD + bcolors.FAIL + "    TARGET:" + bcolors.ENDC)
         
         for enemy in enemies:
@@ -88,10 +93,13 @@ class Person:
         choice = int(input("    Choose Target: ")) - 1
         return choice
     
-
+    # print enemy stats
     def get_enemy_stats(self):
         hp_bar = ""
         hp_ticks = (self.hp/self.maxhp) * 50
+
+        mp_bar = ""
+        mp_ticks = (self.mp / self.maxmp) * 10
 
         while hp_ticks > 0:
             hp_bar += "█"
@@ -100,9 +108,19 @@ class Person:
         while len(hp_bar) < 50:
             hp_bar += " "
 
-        print("{:<35}{:}".format("", str("_"*50) ))
+
+        # mp bar
+        while mp_ticks > 0:
+            mp_bar += "█"
+            mp_ticks -= 1
+        while len(mp_bar) < 10:
+            mp_bar += " "
+
+
+        print("{:<35}{:<70}{:}".format("", str("_"*50), str("_"*10) ))
         # formating to align left and be 4 and 2 characters long resp
-        print(bcolors.BOLD + "{:<13}{:>20} ".format(self.name + ":", str(self.hp) + "/" + str(self.maxhp)) + "|" + bcolors.FAIL + hp_bar + bcolors.ENDC + "|\n" )        
+        print(bcolors.BOLD + "{:<13}{:>20} ".format(self.name + ":", str(self.hp) + "/" + str(self.maxhp)) + "|" + bcolors.FAIL + hp_bar + bcolors.ENDC + "|" +
+                        "{:>17} ".format(str(self.mp) + "/" + str(self.maxmp)) + "|" + bcolors.OKBLUE + mp_bar + bcolors.ENDC + "|\n" )        
     
     # ascii 219 | █ to print player HP/MP bar
     def get_stats(self):
@@ -127,11 +145,28 @@ class Person:
             mp_bar += " "
 
         #print("                      _________________________               __________")
-        print("{:<35}{:<45}{:}".format("",str("_"*25), str("_"*10)))
+        print("{:<35}{:<70}{:}".format("",str("_"*25), str("_"*10)))
         # formating to align left and be 4 and 2 characters long resp
         """print(bcolors.BOLD + self.name + "     " + 
                 "{:>{hp_len}}".format(str(self.hp), hp_len = hp_len) + "/" + str(self.maxhp) + " |" + bcolors.OKGREEN + hp_bar + bcolors.ENDC + "|       " + bcolors.BOLD +
                 "{:>{mp_len}s}".format(str(self.mp), mp_len = mp_len) + "/" + str(self.maxmp) + " |" + bcolors.OKBLUE + mp_bar + bcolors.ENDC + "|\n")
         """
         print(bcolors.BOLD + "{:<13}{:>20} ".format(self.name + ":", str(self.hp) + "/" + str(self.maxhp)) + "|" + bcolors.OKGREEN + hp_bar + bcolors.ENDC + "|" +
-                        "{:>17} ".format(str(self.mp) + "/" + str(self.maxmp)) + "|" + bcolors.OKBLUE + mp_bar + bcolors.ENDC + "|\n" )
+                        "{:>42} ".format(str(self.mp) + "/" + str(self.maxmp)) + "|" + bcolors.OKBLUE + mp_bar + bcolors.ENDC + "|\n" )
+        
+
+    def choose_enemy_spell(self):
+        magic_choice = random.randrange(0, len(self.magic))
+
+        spell = self.magic[magic_choice]
+        magic_dmg = spell.generate_damage()
+
+        # enemy hp percentage
+        pct = self.hp / self.maxhp * 100
+
+        # if enemy hp more than 50% and the spell is white or mp lower than cost of spell
+        if self.mp < spell.cost or spell.type == "white" and pct > 50:
+            return self.choose_enemy_spell()
+        else:
+            return spell, magic_dmg
+
